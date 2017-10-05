@@ -33,6 +33,7 @@ RUN mkdir -p /calibre-library /calibre-import
 RUN wget --no-check-certificate -nv -O- https://raw.githubusercontent.com/kovidgoyal/calibre/master/setup/linux-installer.py | python -c "import sys; main=lambda:sys.stderr.write('Download failed\n'); exec(sys.stdin.read()); main('/opt/', True)"
 
 COPY calibre-server.sh /etc/service/calibre-server/run
+RUN chmod +x /etc/service/calibre-server/run
 
 RUN echo "*/10 * * * * xvfb-run calibredb add /calibre-import/ -r --with-library /calibre-library && rm /calibre-import/*" >> /etc/cron.d/calibre-import
 
