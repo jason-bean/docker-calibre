@@ -17,5 +17,5 @@ wget --no-check-certificate -nv -O- https://raw.githubusercontent.com/kovidgoyal
 VOLUME ["/calibre-library"]
 EXPOSE 8080
 USER nobody
-CMD ["/opt/calibre/calibre-server","\"/calibre-library\"""]
+CMD ["/opt/calibre/calibre-server","""/calibre-library"""]
 
