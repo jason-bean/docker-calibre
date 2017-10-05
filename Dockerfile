@@ -39,4 +39,3 @@ RUN echo "*/10 * * * * xvfb-run calibredb add /calibre-import/ -r --with-library
 VOLUME ["/calibre-library"]
 VOLUME ["/calibre-import"]
 EXPOSE 8080
-USER nobody
