@@ -1,3 +1,5 @@
+#!/bin/bash
+
 URL_PREFIX=${URL_PREFIX}
 if [ -n "$URL_PREFIX" ]; then
   /opt/calibre/calibre-server --daemonize "/calibre-library"
