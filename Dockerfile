@@ -25,7 +25,7 @@ RUN apt-get update && \
 apt-get install -y \
 wget \
 python \
-xdg-utils \
+xvfb \
 ImageMagick
 
 RUN mkdir -p /calibre-library /calibre-import
