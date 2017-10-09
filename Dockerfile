@@ -35,7 +35,8 @@ RUN wget --no-check-certificate -nv -O- https://raw.githubusercontent.com/kovidg
 COPY calibre-server.sh /etc/service/calibre-server/run
 RUN chmod +x /etc/service/calibre-server/run
 
-RUN echo "*/10 * * * * xvfb-run calibredb add /calibre-import/ -r --with-library /calibre-library && rm /calibre-import/*" >> /etc/cron.d/calibre-import
+#RUN echo "*/10 * * * * xvfb-run calibredb add /calibre-import/ -r --with-library /calibre-library && rm /calibre-import/*" >> /etc/cron.d/calibre-import
+RUN (crontab -l 2>/dev/null; echo "*/10 * * * * xvfb-run calibredb add /calibre-import/ -r --with-library /calibre-library && rm /calibre-import/*") | crontab -
 
 VOLUME ["/calibre-library"]
 VOLUME ["/calibre-import"]
