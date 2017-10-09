@@ -1,5 +1,5 @@
 
-FROM phusion/baseimage:0.9.18
+FROM phusion/baseimage:0.9.22
 LABEL maintainer "taddeusz@gmail.com"
 
 # Set correct environment variables.
@@ -28,14 +28,16 @@ python \
 xvfb \
 ImageMagick
 
-RUN mkdir -p /calibre-library /calibre-import
+RUN mkdir -p /calibre-library /calibre-import /etc/firstrun
 
 RUN wget --no-check-certificate -nv -O- https://raw.githubusercontent.com/kovidgoyal/calibre/master/setup/linux-installer.py | python -c "import sys; main=lambda:sys.stderr.write('Download failed\n'); exec(sys.stdin.read()); main('/opt/', True)"
 
 COPY calibre-server.sh /etc/service/calibre-server/run
-RUN chmod +x /etc/service/calibre-server/run
+COPY firstrun.sh /etc/my_init.d/firstrun.sh
+COPY metadata.db /etc/firstrun
+RUN chmod +x /etc/service/calibre-server/run && \
+    chmod +x /etc/my_init.d/firstrun.sh
 
-#RUN echo "*/10 * * * * xvfb-run calibredb add /calibre-import/ -r --with-library /calibre-library && rm /calibre-import/*" >> /etc/cron.d/calibre-import
 RUN (crontab -l 2>/dev/null; echo "*/10 * * * * xvfb-run /opt/calibre/calibredb add /calibre-import/ -r --with-library http://localhost:8080/#calibre-library && rm /calibre-import/*") | crontab -
 
 VOLUME ["/calibre-library"]
