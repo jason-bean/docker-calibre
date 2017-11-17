@@ -1,5 +1,5 @@
 
-FROM phusion/baseimage:0.9.18
+FROM phusion/baseimage:0.9.22
 LABEL maintainer "taddeusz@gmail.com"
 
 # Set correct environment variables.
@@ -22,23 +22,25 @@ RUN usermod -u 99 nobody && \
 RUN rm -rf /etc/service/sshd /etc/my_init.d/00_regen_ssh_host_keys.sh
 
 RUN apt-get update && \
-apt-get install -y \
-wget \
-python \
-xvfb \
-ImageMagick
-
-RUN mkdir -p /calibre-library /calibre-import /etc/firstrun
-
-RUN wget --no-check-certificate -nv -O- https://raw.githubusercontent.com/kovidgoyal/calibre/master/setup/linux-installer.py | python -c "import sys; main=lambda:sys.stderr.write('Download failed\n'); exec(sys.stdin.read()); main('/opt/', True)"
+    apt-get install -y \
+        wget \
+        python \
+        xz-utils \
+        libqt5widgets5 && \
+    wget --no-check-certificate -nv -O- https://raw.githubusercontent.com/kovidgoyal/calibre/master/setup/linux-installer.py | python -c "import sys; main=lambda:sys.stderr.write('Download failed\n'); exec(sys.stdin.read()); main('/opt/', True)" && \
+    mkdir -p /calibre-library /calibre-import /etc/firstrun && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
+                            /usr/share/man /usr/share/groff /usr/share/info \
+                            /usr/share/lintian /usr/share/linda /var/cache/man && \
+        (( find /usr/share/doc -depth -type f ! -name copyright|xargs rm || true )) && \
+        (( find /usr/share/doc -empty|xargs rmdir || true ))
 
 COPY calibre-server.sh /etc/service/calibre-server/run
 COPY firstrun.sh /etc/my_init.d/firstrun.sh
 COPY metadata.db /etc/firstrun
 RUN chmod +x /etc/service/calibre-server/run && \
-    chmod +x /etc/my_init.d/firstrun.sh
-
-RUN (crontab -l 2>/dev/null; echo "*/10 * * * * xvfb-run /opt/calibre/calibredb add /calibre-import/ -r --with-library http://localhost:8080/#calibre-library && rm /calibre-import/*") | crontab -
+    chmod +x /etc/my_init.d/firstrun.sh && \
+    (crontab -l 2>/dev/null; echo "*/10 * * * * /opt/calibre/calibredb add /calibre-import/ -r --with-library http://localhost:8080/#calibre-library && rm /calibre-import/*") | crontab -
 
 VOLUME ["/calibre-library"]
 VOLUME ["/calibre-import"]
