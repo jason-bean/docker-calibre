@@ -36,7 +36,7 @@ RUN apt-get update && \
         (( find /usr/share/doc -depth -type f ! -name copyright|xargs rm || true )) && \
         (( find /usr/share/doc -empty|xargs rmdir || true ))
 
-ENV CALIBRE_VER=3.13.0
+ENV CALIBRE_VER=3.14.0
 RUN wget -O- https://github.com/kovidgoyal/calibre/releases/download/v${CALIBRE_VER}/calibre-${CALIBRE_VER}-x86_64.txz | tar -xJ -C /opt/calibre
 
 COPY calibre-server.sh /etc/service/calibre-server/run
