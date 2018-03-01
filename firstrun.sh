@@ -8,3 +8,5 @@ else
   chown nobody:users -R /calibre-library
   chmod 755 -R /calibre-library
 fi
+
+exec tini -- supervisord --nodaemon --configuration /etc/supervisord.conf
