@@ -20,15 +20,12 @@ RUN apk update && \
     rm -rf /tmp/calibre-installer-cache && \
     apk del ca-certificates wget xz
 
-COPY firstrun.sh /firstrun.sh
-COPY calibre-import.sh /etc/periodic/15min/calibre-import
-COPY metadata.db /etc/firstrun/metadata.db
-COPY supervisord.conf /etc/supervisord.conf
-RUN chmod +x /firstrun.sh && \
+ADD /image /
+RUN chmod +x /startup.sh && \
     chmod +x /etc/periodic/15min/calibre-import
 
 VOLUME ["/calibre-library"]
 VOLUME ["/calibre-import"]
 EXPOSE 8080
 
-CMD [ "/firstrun.sh" ]
+CMD [ "/startup.sh" ]
