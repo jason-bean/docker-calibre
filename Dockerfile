@@ -27,7 +27,9 @@ RUN apk update && \
     python \
     tini \
     supervisor \
-    qt5-qtbase-x11
+    qt5-qtbase-x11 \
+    libxrender \
+    libxcomposite
 
 COPY --from=build /opt/calibre/ /opt/calibre/
 ADD /image /

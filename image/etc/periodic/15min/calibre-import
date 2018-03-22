@@ -1,4 +1,10 @@
-#!/bin/sh
+#!/bin/bash
 
-/opt/calibre/calibredb add /calibre-import/ -r --with-library http://localhost:8080/#calibre-library
-rm /calibre-import/*
+datetime=$(date -u +"%Y-%m-%d %H:%M:%S")
+filescount=$(ls -1 /calibre-import/* 2> /dev/null|wc -l)
+
+if [ $filescount -gt 0 ]; then
+    echo -n "$(date -u +"%Y-%m-%d %H:%M:%S") INFO "
+    /opt/calibre/calibredb add /calibre-import/ -r --with-library http://localhost:8080/#calibre-library
+    rm /calibre-import/*
+fi
